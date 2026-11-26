@@ -2,7 +2,7 @@
 
 import type { JSONContent } from "@tiptap/core";
 import { useRouter } from "next/navigation";
-import { useId, useState } from "react";
+import { useCallback, useId, useState } from "react";
 import { DeleteNoteButton } from "@/components/DeleteNoteButton";
 import { ShareDialog } from "@/components/ShareDialog";
 import { Editor } from "@/components/editor/Editor";
@@ -45,6 +45,7 @@ export function NoteEditor({
   const titleId = useId();
   const [title, setTitle] = useState(initialTitle);
   const { status, error, queue, flush } = useAutosave(noteId);
+  const onContentChange = useCallback((content: JSONContent) => queue({ content: JSON.stringify(content) }), [queue]);
 
   // NOTE-06 for in-app navigation: save first; if that fails, ask before leaving.
   async function goBack() {
@@ -83,7 +84,7 @@ export function NoteEditor({
         className={`w-full bg-transparent text-3xl font-bold outline-none placeholder:text-neutral-400 ${ui.focus}`}
       />
 
-      <Editor initialContent={initialContent} onChange={(content) => queue({ content })} />
+      <Editor initialContent={initialContent} onChange={onContentChange} />
     </main>
   );
 }

@@ -1,11 +1,12 @@
 "use client";
 
-import type { JSONContent } from "@tiptap/core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { updateNote } from "@/app/notes/actions";
 
 export type SaveStatus = "saved" | "unsaved" | "saving" | "error";
-type Patch = { title?: string; content?: JSONContent };
+// Content travels as a JSON string: ProseMirror attrs objects are not plain objects,
+// and React's server-action serializer would turn them into opaque references.
+type Patch = { title?: string; content?: string };
 
 const DEBOUNCE_MS = 1000; // NOTE-05
 const RETRY_MS = 5000; // NFR-07: keep retrying in the background

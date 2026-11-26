@@ -16,7 +16,7 @@ const idSchema = z.uuid();
 const patchSchema = z
   .object({
     title: z.string().max(MAX_TITLE_LENGTH, `Title must be at most ${MAX_TITLE_LENGTH} characters.`).optional(),
-    content: z.unknown().optional(),
+    content: z.string().optional(), // TipTap JSON, serialized by the client
   })
   .strict();
 
@@ -35,7 +35,7 @@ export async function createNote(): Promise<void> {
 
 export async function updateNote(
   id: string,
-  patch: { title?: string; content?: unknown },
+  patch: { title?: string; content?: string },
 ): Promise<{ ok: true; updatedAt: number } | Fail> {
   const userId = await currentUserId();
   if (!userId) return NOT_SIGNED_IN;

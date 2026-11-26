@@ -22,11 +22,11 @@ test("E2E-01: sign up, sign out, sign in", async ({ page }) => {
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password").fill("wrong-password");
   await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page.getByRole("alert")).toHaveText("Invalid email or password.");
+  await expect(page.getByRole("main").getByRole("alert")).toHaveText("Invalid email or password.");
   await page.getByLabel("Email").fill(uniqueEmail("nobody"));
   await page.getByLabel("Password").fill(PASSWORD);
   await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page.getByRole("alert")).toHaveText("Invalid email or password.");
+  await expect(page.getByRole("main").getByRole("alert")).toHaveText("Invalid email or password.");
 
   await signIn(page, email);
   await expect(page).toHaveURL(/\/notes$/);
@@ -42,7 +42,7 @@ test("AUTH-01: email must be unique", async ({ page, browser }) => {
   await other.getByLabel("Email").fill(email);
   await other.getByLabel("Password").fill(PASSWORD);
   await other.getByRole("button", { name: "Create account" }).click();
-  await expect(other.getByRole("alert")).toBeVisible();
+  await expect(other.getByRole("main").getByRole("alert")).toBeVisible();
   await expect(other).toHaveURL(/\/signup/);
 });
 
